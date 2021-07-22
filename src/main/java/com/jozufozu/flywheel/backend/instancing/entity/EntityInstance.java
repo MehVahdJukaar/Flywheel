@@ -13,14 +13,14 @@ import com.jozufozu.flywheel.core.materials.IFlatLight;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.Level;
 
 /**
  * The layer between a {@link TileEntity} and the Flywheel backend.
@@ -41,7 +41,7 @@ public abstract class EntityInstance<E extends Entity> implements IInstance {
 
 	protected final MaterialManager<?> materialManager;
 	protected final E entity;
-	protected final World world;
+	protected final Level world;
 
 	public EntityInstance(MaterialManager<?> materialManager, E entity) {
 		this.materialManager = materialManager;
@@ -92,8 +92,8 @@ public abstract class EntityInstance<E extends Entity> implements IInstance {
 	 * represents should be rendered at to appear in the correct location.
 	 */
 	public Vector3f getInstancePosition() {
-		Vector3d pos = entity.position();
-		Vector3i origin = materialManager.getOriginCoordinate();
+		Vec3 pos = entity.position();
+		Vec3i origin = materialManager.getOriginCoordinate();
 		return new Vector3f((float) (pos.x - origin.getX()), (float) (pos.y - origin.getY()), (float) (pos.z - origin.getZ()));
 	}
 
@@ -103,11 +103,11 @@ public abstract class EntityInstance<E extends Entity> implements IInstance {
 	}
 
 	protected void relight(BlockPos pos, IFlatLight<?>... models) {
-		relight(world.getBrightness(LightType.BLOCK, pos), world.getBrightness(LightType.SKY, pos), models);
+		relight(world.getBrightness(LightLayer.BLOCK, pos), world.getBrightness(LightLayer.SKY, pos), models);
 	}
 
 	protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<L> models) {
-		relight(world.getBrightness(LightType.BLOCK, pos), world.getBrightness(LightType.SKY, pos), models);
+		relight(world.getBrightness(LightLayer.BLOCK, pos), world.getBrightness(LightLayer.SKY, pos), models);
 	}
 
 	protected void relight(int block, int sky, IFlatLight<?>... models) {

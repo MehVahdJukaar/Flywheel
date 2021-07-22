@@ -31,9 +31,9 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.GlTexture;
 import com.jozufozu.flywheel.backend.gl.versioned.RGPixelFormat;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.LightType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LightLayer;
 
 public class LightVolume {
 
@@ -119,7 +119,7 @@ public class LightVolume {
 		return textureVolume.sizeZ();
 	}
 
-	public void move(IBlockDisplayReader world, GridAlignedBB newSampleVolume) {
+	public void move(BlockAndTintGetter world, GridAlignedBB newSampleVolume) {
 		if (textureVolume.contains(newSampleVolume)) {
 			if (newSampleVolume.intersects(sampleVolume)) {
 				GridAlignedBB newArea = newSampleVolume.intersect(sampleVolume);
@@ -140,17 +140,17 @@ public class LightVolume {
 		}
 	}
 
-	public void notifyLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changedVolume) {
+	public void notifyLightUpdate(BlockAndTintGetter world, LightLayer type, GridAlignedBB changedVolume) {
 		if (removed) return;
 
 		if (!changedVolume.intersects(sampleVolume)) return;
 		changedVolume = changedVolume.intersect(sampleVolume); // compute the region contained by us that has dirty lighting data.
 
-		if (type == LightType.BLOCK) copyBlock(world, changedVolume);
-		else if (type == LightType.SKY) copySky(world, changedVolume);
+		if (type == LightLayer.BLOCK) copyBlock(world, changedVolume);
+		else if (type == LightLayer.SKY) copySky(world, changedVolume);
 	}
 
-	public void notifyLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
+	public void notifyLightPacket(BlockAndTintGetter world, int chunkX, int chunkZ) {
 		if (removed) return;
 
 		GridAlignedBB changedVolume = GridAlignedBB.from(chunkX, chunkZ);
@@ -164,8 +164,8 @@ public class LightVolume {
 	 * Completely (re)populate this volume with block and sky lighting data.
 	 * This is expensive and should be avoided.
 	 */
-	public void initialize(IBlockDisplayReader world) {
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+	public void initialize(BlockAndTintGetter world) {
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		int shiftX = textureVolume.minX;
 		int shiftY = textureVolume.minY;
@@ -174,8 +174,8 @@ public class LightVolume {
 		sampleVolume.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
 
-			int blockLight = world.getBrightness(LightType.BLOCK, pos);
-			int skyLight = world.getBrightness(LightType.SKY, pos);
+			int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
+			int skyLight = world.getBrightness(LightLayer.SKY, pos);
 
 			writeLight(x - shiftX, y - shiftY, z - shiftZ, blockLight, skyLight);
 		});
@@ -188,8 +188,8 @@ public class LightVolume {
 	 *
 	 * @param worldVolume the region in the world to copy data from.
 	 */
-	public void copyBlock(IBlockDisplayReader world, GridAlignedBB worldVolume) {
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+	public void copyBlock(BlockAndTintGetter world, GridAlignedBB worldVolume) {
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		int xShift = textureVolume.minX;
 		int yShift = textureVolume.minY;
@@ -198,7 +198,7 @@ public class LightVolume {
 		worldVolume.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
 
-			int light = world.getBrightness(LightType.BLOCK, pos);
+			int light = world.getBrightness(LightLayer.BLOCK, pos);
 
 			writeBlock(x - xShift, y - yShift, z - zShift, light);
 		});
@@ -211,8 +211,8 @@ public class LightVolume {
 	 *
 	 * @param worldVolume the region in the world to copy data from.
 	 */
-	public void copySky(IBlockDisplayReader world, GridAlignedBB worldVolume) {
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+	public void copySky(BlockAndTintGetter world, GridAlignedBB worldVolume) {
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		int xShift = textureVolume.minX;
 		int yShift = textureVolume.minY;
@@ -221,7 +221,7 @@ public class LightVolume {
 		worldVolume.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
 
-			int light = world.getBrightness(LightType.SKY, pos);
+			int light = world.getBrightness(LightLayer.SKY, pos);
 
 			writeSky(x - xShift, y - yShift, z - zShift, light);
 		});
@@ -234,8 +234,8 @@ public class LightVolume {
 	 *
 	 * @param worldVolume the region in the world to copy data from.
 	 */
-	public void copyLight(IBlockDisplayReader world, GridAlignedBB worldVolume) {
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+	public void copyLight(BlockAndTintGetter world, GridAlignedBB worldVolume) {
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		int xShift = textureVolume.minX;
 		int yShift = textureVolume.minY;
@@ -244,8 +244,8 @@ public class LightVolume {
 		worldVolume.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
 
-			int block = world.getBrightness(LightType.BLOCK, pos);
-			int sky = world.getBrightness(LightType.SKY, pos);
+			int block = world.getBrightness(LightLayer.BLOCK, pos);
+			int sky = world.getBrightness(LightLayer.SKY, pos);
 
 			writeLight(x - xShift, y - yShift, z - zShift, block, sky);
 		});

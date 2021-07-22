@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.gl.GlObject;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.jozufozu.flywheel.backend.loading.Shader;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class GlShader extends GlObject {
 

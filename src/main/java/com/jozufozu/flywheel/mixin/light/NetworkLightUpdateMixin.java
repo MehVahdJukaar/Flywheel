@@ -13,32 +13,32 @@ import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.LightUpdater;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.play.server.SUpdateLightPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ClassInheritanceMultiMap;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.protocol.game.ClientboundLightUpdatePacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.util.ClassInstanceMultiMap;
+import net.minecraft.world.level.chunk.LevelChunk;
 
-@Mixin(ClientPlayNetHandler.class)
+@Mixin(ClientPacketListener.class)
 public class NetworkLightUpdateMixin {
 
 	@Inject(at = @At("TAIL"), method = "handleLightUpdatePacked")
-	private void onLightPacket(SUpdateLightPacket packet, CallbackInfo ci) {
+	private void onLightPacket(ClientboundLightUpdatePacket packet, CallbackInfo ci) {
 		RenderWork.enqueue(() -> {
-			ClientWorld world = Minecraft.getInstance().level;
+			ClientLevel world = Minecraft.getInstance().level;
 
 			if (world == null) return;
 
 			int chunkX = packet.getX();
 			int chunkZ = packet.getZ();
 
-			Chunk chunk = world.getChunkSource()
+			LevelChunk chunk = world.getChunkSource()
 					.getChunk(chunkX, chunkZ, false);
 
 			if (chunk != null) {
-				InstanceManager<TileEntity> tiles = InstancedRenderDispatcher.getTiles(world);
+				InstanceManager<BlockEntity> tiles = InstancedRenderDispatcher.getTiles(world);
 				InstanceManager<Entity> entities = InstancedRenderDispatcher.getEntities(world);
 
 				chunk.getBlockEntities()
@@ -46,7 +46,7 @@ public class NetworkLightUpdateMixin {
 						.forEach(tiles::onLightUpdate);
 
 				Arrays.stream(chunk.getEntitySections())
-						.flatMap(ClassInheritanceMultiMap::stream)
+						.flatMap(ClassInstanceMultiMap::stream)
 						.forEach(entities::onLightUpdate);
 			}
 

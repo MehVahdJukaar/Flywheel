@@ -14,14 +14,14 @@ import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.util.WeakHashSet;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix4f;
+import net.minecraft.core.Vec3i;
 
 // TODO: 0.2 block atlas should not be a special case
 public class MaterialManager<P extends WorldProgram> {
@@ -140,7 +140,7 @@ public class MaterialManager<P extends WorldProgram> {
 		return getMaterial(Materials.ORIENTED);
 	}
 
-	public Vector3i getOriginCoordinate() {
+	public Vec3i getOriginCoordinate() {
 		return originCoordinate;
 	}
 
@@ -148,10 +148,10 @@ public class MaterialManager<P extends WorldProgram> {
 		listeners.add(listener);
 	}
 
-	public void checkAndShiftOrigin(ActiveRenderInfo info) {
-		int cX = MathHelper.floor(info.getPosition().x);
-		int cY = MathHelper.floor(info.getPosition().y);
-		int cZ = MathHelper.floor(info.getPosition().z);
+	public void checkAndShiftOrigin(Camera info) {
+		int cX = Mth.floor(info.getPosition().x);
+		int cY = Mth.floor(info.getPosition().y);
+		int cZ = Mth.floor(info.getPosition().z);
 
 		int dX = cX - originCoordinate.getX();
 		int dY = cY - originCoordinate.getY();

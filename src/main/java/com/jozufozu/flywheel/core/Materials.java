@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

@@ -18,7 +18,7 @@ import com.jozufozu.flywheel.core.shader.IMultiProgram;
 import com.jozufozu.flywheel.core.shader.spec.ProgramSpec;
 import com.jozufozu.flywheel.core.shader.spec.ProgramState;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class ShaderContext<P extends GlProgram> implements IShaderContext<P> {
 

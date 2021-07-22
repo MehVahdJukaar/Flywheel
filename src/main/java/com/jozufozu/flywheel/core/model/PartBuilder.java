@@ -13,8 +13,8 @@ import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.core.Formats;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 
 public class PartBuilder {
 

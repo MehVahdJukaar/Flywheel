@@ -21,7 +21,7 @@ import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class Program {
 	public final ResourceLocation name;

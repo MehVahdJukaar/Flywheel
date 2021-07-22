@@ -2,7 +2,7 @@ package com.jozufozu.flywheel.vanilla;
 
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 /**
  * TODO:
@@ -30,17 +30,17 @@ public class VanillaInstances {
 	public static void init() {
 		InstancedRenderRegistry r = InstancedRenderRegistry.getInstance();
 
-		r.tile(TileEntityType.CHEST)
+		r.tile(BlockEntityType.CHEST)
 				.setSkipRender(true)
 				.factory(ChestInstance::new);
-		r.tile(TileEntityType.ENDER_CHEST)
+		r.tile(BlockEntityType.ENDER_CHEST)
 				.setSkipRender(true)
 				.factory(ChestInstance::new);
-		r.tile(TileEntityType.TRAPPED_CHEST)
+		r.tile(BlockEntityType.TRAPPED_CHEST)
 				.setSkipRender(true)
 				.factory(ChestInstance::new);
 
-		r.tile(TileEntityType.BELL)
+		r.tile(BlockEntityType.BELL)
 				.setSkipRender(true)
 				.factory(BellInstance::new);
 	}

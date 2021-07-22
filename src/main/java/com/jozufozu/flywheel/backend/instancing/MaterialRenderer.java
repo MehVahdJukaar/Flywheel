@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.math.vector.Matrix4f;
+import com.mojang.math.Matrix4f;
 
 public class MaterialRenderer<P extends WorldProgram> {
 

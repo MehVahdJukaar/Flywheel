@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.core.shader.gamestate.FogStateProvider;
 import com.jozufozu.flywheel.core.shader.gamestate.NormalDebugStateProvider;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

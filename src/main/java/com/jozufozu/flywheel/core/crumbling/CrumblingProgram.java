@@ -10,10 +10,10 @@ import com.jozufozu.flywheel.core.atlas.SheetData;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
 
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.world.inventory.InventoryMenu;
 
 public class CrumblingProgram extends WorldProgram {
 	protected final int uTextureScale;
@@ -36,7 +36,7 @@ public class CrumblingProgram extends WorldProgram {
 	}
 
 	public void setDefaultAtlasSize() {
-		SheetData atlasData = AtlasInfo.getAtlasData(PlayerContainer.BLOCK_ATLAS);
+		SheetData atlasData = AtlasInfo.getAtlasData(InventoryMenu.BLOCK_ATLAS);
 		if (atlasData == null) return;
 
 		int width = atlasData.width;
@@ -46,7 +46,7 @@ public class CrumblingProgram extends WorldProgram {
 	}
 
 	public void setAtlasSize(int width, int height) {
-		AtlasTexture blockAtlas = AtlasInfo.getAtlas(PlayerContainer.BLOCK_ATLAS);
+		TextureAtlas blockAtlas = AtlasInfo.getAtlas(InventoryMenu.BLOCK_ATLAS);
 		if (blockAtlas == null) return;
 
 		TextureAtlasSprite sprite = blockAtlas.getSprite(ModelBakery.BREAKING_LOCATIONS.get(0));

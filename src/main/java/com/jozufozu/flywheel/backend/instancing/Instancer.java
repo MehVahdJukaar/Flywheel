@@ -14,11 +14,11 @@ import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.util.AttribUtil;
 
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.core.Vec3i;
 
 public class Instancer<D extends InstanceData> {
 
-	public final Supplier<Vector3i> originCoordinate;
+	public final Supplier<Vec3i> originCoordinate;
 
 	protected final BufferedModel model;
 
@@ -35,7 +35,7 @@ public class Instancer<D extends InstanceData> {
 	boolean anyToRemove;
 	boolean anyToUpdate;
 
-	public Instancer(BufferedModel model, Supplier<Vector3i> originCoordinate, MaterialSpec<D> spec) {
+	public Instancer(BufferedModel model, Supplier<Vec3i> originCoordinate, MaterialSpec<D> spec) {
 		this.model = model;
 		this.factory = spec.getInstanceFactory();
 		this.instanceFormat = spec.getInstanceFormat();

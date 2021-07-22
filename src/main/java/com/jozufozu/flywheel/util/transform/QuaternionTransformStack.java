@@ -3,7 +3,7 @@ package com.jozufozu.flywheel.util.transform;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import net.minecraft.util.math.vector.Quaternion;
+import com.mojang.math.Quaternion;
 
 public class QuaternionTransformStack implements TransformStack {
 

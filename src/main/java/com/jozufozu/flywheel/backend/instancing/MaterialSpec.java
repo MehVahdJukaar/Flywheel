@@ -2,8 +2,8 @@ package com.jozufozu.flywheel.backend.instancing;
 
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
 
 public class MaterialSpec<D extends InstanceData> {
 
@@ -16,7 +16,7 @@ public class MaterialSpec<D extends InstanceData> {
 	private final ResourceLocation texture;
 
 	public MaterialSpec(ResourceLocation name, ResourceLocation programSpec, VertexFormat modelFormat, VertexFormat instanceFormat, IInstanceFactory<D> instanceFactory) {
-		this(name, programSpec, modelFormat, instanceFormat, PlayerContainer.BLOCK_ATLAS, instanceFactory);
+		this(name, programSpec, modelFormat, instanceFormat, InventoryMenu.BLOCK_ATLAS, instanceFactory);
 	}
 
 	public MaterialSpec(ResourceLocation name, ResourceLocation programSpec, VertexFormat modelFormat, VertexFormat instanceFormat, ResourceLocation texture, IInstanceFactory<D> instanceFactory) {

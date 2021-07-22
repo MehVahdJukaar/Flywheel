@@ -18,9 +18,9 @@ import com.jozufozu.flywheel.core.shader.IProgramCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Matrix4f;
 
 public class CrumblingMaterialManager extends MaterialManager<CrumblingProgram> {
 
@@ -47,7 +47,7 @@ public class CrumblingMaterialManager extends MaterialManager<CrumblingProgram> 
 		TextureManager textureManager = Minecraft.getInstance().textureManager;
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureManager.getTexture(PlayerContainer.BLOCK_ATLAS)
+		glBindTexture(GL_TEXTURE_2D, textureManager.getTexture(InventoryMenu.BLOCK_ATLAS)
 				.getId());
 
 		for (MaterialRenderer<CrumblingProgram> material : atlasRenderers) {

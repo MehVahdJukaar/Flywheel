@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.backend.Backend;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.Camera;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 
 public abstract class InstanceManager<T> implements MaterialManager.OriginShiftListener {
 
@@ -78,7 +78,7 @@ public abstract class InstanceManager<T> implements MaterialManager.OriginShiftL
 		});
 	}
 
-	public void beginFrame(ActiveRenderInfo info) {
+	public void beginFrame(Camera info) {
 		frame++;
 		processQueuedAdditions();
 

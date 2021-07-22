@@ -6,8 +6,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.IWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -38,10 +38,10 @@ public class ForgeEvents {
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 
 		if (Backend.isFlywheelWorld(world)) {
-			InstancedRenderDispatcher.loadAllInWorld((ClientWorld) world);
+			InstancedRenderDispatcher.loadAllInWorld((ClientLevel) world);
 		}
 	}
 

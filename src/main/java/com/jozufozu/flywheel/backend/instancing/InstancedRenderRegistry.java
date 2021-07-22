@@ -12,10 +12,10 @@ import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class InstancedRenderRegistry {
 	private static final InstancedRenderRegistry INSTANCE = new InstancedRenderRegistry();
@@ -25,14 +25,14 @@ public class InstancedRenderRegistry {
 	}
 
 	private final Object2BooleanMap<Object> skipRender = new Object2BooleanLinkedOpenHashMap<>();
-	private final Map<TileEntityType<?>, ITileInstanceFactory<?>> tiles = Maps.newHashMap();
+	private final Map<BlockEntityType<?>, ITileInstanceFactory<?>> tiles = Maps.newHashMap();
 	private final Map<EntityType<?>, IEntityInstanceFactory<?>> entities = Maps.newHashMap();
 
 	protected InstancedRenderRegistry() {
 		skipRender.defaultReturnValue(false);
 	}
 
-	public <T extends TileEntity> boolean shouldSkipRender(T type) {
+	public <T extends BlockEntity> boolean shouldSkipRender(T type) {
 		return _skipRender(type.getType()) || ((type instanceof IInstanceRendered) && !((IInstanceRendered) type).shouldRenderNormally());
 	}
 
@@ -40,7 +40,7 @@ public class InstancedRenderRegistry {
 		return _skipRender(type.getType()) || ((type instanceof IInstanceRendered) && !((IInstanceRendered) type).shouldRenderNormally());
 	}
 
-	public <T extends TileEntity> boolean canInstance(TileEntityType<? extends T> type) {
+	public <T extends BlockEntity> boolean canInstance(BlockEntityType<? extends T> type) {
 		return tiles.containsKey(type);
 	}
 
@@ -48,7 +48,7 @@ public class InstancedRenderRegistry {
 		return entities.containsKey(type);
 	}
 
-	public <T extends TileEntity> TileConfig<? extends T> tile(TileEntityType<? extends T> type) {
+	public <T extends BlockEntity> TileConfig<? extends T> tile(BlockEntityType<? extends T> type) {
 		return new TileConfig<>(type);
 	}
 
@@ -60,7 +60,7 @@ public class InstancedRenderRegistry {
 	 * @deprecated will be removed in 0.3.0, use {@link #tile}
 	 */
 	@Deprecated
-	public <T extends TileEntity> void register(TileEntityType<? extends T> type, ITileInstanceFactory<? super T> rendererFactory) {
+	public <T extends BlockEntity> void register(BlockEntityType<? extends T> type, ITileInstanceFactory<? super T> rendererFactory) {
 		this.tile(type)
 				.factory(rendererFactory);
 	}
@@ -76,8 +76,8 @@ public class InstancedRenderRegistry {
 
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public <T extends TileEntity> TileEntityInstance<? super T> create(MaterialManager<?> manager, T tile) {
-		TileEntityType<?> type = tile.getType();
+	public <T extends BlockEntity> TileEntityInstance<? super T> create(MaterialManager<?> manager, T tile) {
+		BlockEntityType<?> type = tile.getType();
 		ITileInstanceFactory<? super T> factory = (ITileInstanceFactory<? super T>) this.tiles.get(type);
 
 		if (factory == null) return null;
@@ -99,11 +99,11 @@ public class InstancedRenderRegistry {
 		return skipRender.getBoolean(o);
 	}
 
-	public class TileConfig<T extends TileEntity> {
+	public class TileConfig<T extends BlockEntity> {
 
-		private final TileEntityType<T> type;
+		private final BlockEntityType<T> type;
 
-		public TileConfig(TileEntityType<T> type) {
+		public TileConfig(BlockEntityType<T> type) {
 			this.type = type;
 		}
 

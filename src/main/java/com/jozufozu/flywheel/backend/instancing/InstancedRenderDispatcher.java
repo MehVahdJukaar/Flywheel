@@ -14,10 +14,10 @@ import com.jozufozu.flywheel.util.AnimationTickHolder;
 import com.jozufozu.flywheel.util.WorldAttached;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
@@ -31,15 +31,15 @@ public class InstancedRenderDispatcher {
 	private static final WorldAttached<MaterialManager<WorldProgram>> materialManagers = new WorldAttached<>($ -> new MaterialManager<>(Contexts.WORLD));
 
 	private static final WorldAttached<InstanceManager<Entity>> entityInstanceManager = new WorldAttached<>(world -> new EntityInstanceManager(materialManagers.get(world)));
-	private static final WorldAttached<InstanceManager<TileEntity>> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(materialManagers.get(world)));
+	private static final WorldAttached<InstanceManager<BlockEntity>> tileInstanceManager = new WorldAttached<>(world -> new TileInstanceManager(materialManagers.get(world)));
 
 	@Nonnull
-	public static InstanceManager<TileEntity> getTiles(IWorld world) {
+	public static InstanceManager<BlockEntity> getTiles(LevelAccessor world) {
 		return tileInstanceManager.get(world);
 	}
 
 	@Nonnull
-	public static InstanceManager<Entity> getEntities(IWorld world) {
+	public static InstanceManager<Entity> getEntities(LevelAccessor world) {
 		return entityInstanceManager.get(world);
 	}
 
@@ -50,7 +50,7 @@ public class InstancedRenderDispatcher {
 			return;
 		}
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.level;
+		ClientLevel world = mc.level;
 		AnimationTickHolder.tick();
 
 		Entity renderViewEntity = mc.cameraEntity != null ? mc.cameraEntity : mc.player;
@@ -61,7 +61,7 @@ public class InstancedRenderDispatcher {
 		getEntities(world).tick(renderViewEntity.getX(), renderViewEntity.getY(), renderViewEntity.getZ());
 	}
 
-	public static void enqueueUpdate(TileEntity te) {
+	public static void enqueueUpdate(BlockEntity te) {
 		getTiles(te.getLevel()).queueUpdate(te);
 	}
 
@@ -80,7 +80,7 @@ public class InstancedRenderDispatcher {
 
 	@SubscribeEvent
 	public static void renderLayer(RenderLayerEvent event) {
-		ClientWorld world = event.getWorld();
+		ClientLevel world = event.getWorld();
 		if (!Backend.getInstance()
 				.canUseInstancing(world)) return;
 
@@ -94,17 +94,17 @@ public class InstancedRenderDispatcher {
 
 	@SubscribeEvent
 	public static void onReloadRenderers(ReloadRenderersEvent event) {
-		ClientWorld world = event.getWorld();
+		ClientLevel world = event.getWorld();
 		if (Backend.getInstance()
 				.canUseInstancing() && world != null) {
 			loadAllInWorld(world);
 		}
 	}
 
-	public static void loadAllInWorld(ClientWorld world) {
+	public static void loadAllInWorld(ClientLevel world) {
 		materialManagers.replace(world, MaterialManager::delete);
 
-		InstanceManager<TileEntity> tiles = tileInstanceManager.replace(world);
+		InstanceManager<BlockEntity> tiles = tileInstanceManager.replace(world);
 		world.blockEntityList.forEach(tiles::add);
 
 		InstanceManager<Entity> entities = entityInstanceManager.replace(world);

@@ -12,11 +12,11 @@ import com.jozufozu.flywheel.core.materials.IFlatLight;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.Level;
 
 /**
  * The layer between a {@link TileEntity} and the Flywheel backend.
@@ -35,11 +35,11 @@ import net.minecraft.world.World;
  *
  * @param <T> The type of {@link TileEntity} your class is an instance of.
  */
-public abstract class TileEntityInstance<T extends TileEntity> implements IInstance {
+public abstract class TileEntityInstance<T extends BlockEntity> implements IInstance {
 
 	protected final MaterialManager<?> materialManager;
 	protected final T tile;
-	protected final World world;
+	protected final Level world;
 	protected final BlockPos pos;
 	protected final BlockPos instancePos;
 	protected final BlockState blockState;
@@ -105,11 +105,11 @@ public abstract class TileEntityInstance<T extends TileEntity> implements IInsta
 	}
 
 	protected void relight(BlockPos pos, IFlatLight<?>... models) {
-		relight(world.getBrightness(LightType.BLOCK, pos), world.getBrightness(LightType.SKY, pos), models);
+		relight(world.getBrightness(LightLayer.BLOCK, pos), world.getBrightness(LightLayer.SKY, pos), models);
 	}
 
 	protected <L extends IFlatLight<?>> void relight(BlockPos pos, Stream<L> models) {
-		relight(world.getBrightness(LightType.BLOCK, pos), world.getBrightness(LightType.SKY, pos), models);
+		relight(world.getBrightness(LightLayer.BLOCK, pos), world.getBrightness(LightLayer.SKY, pos), models);
 	}
 
 	protected void relight(int block, int sky, IFlatLight<?>... models) {
